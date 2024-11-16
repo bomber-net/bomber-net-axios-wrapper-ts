@@ -25,6 +25,22 @@ export default class AxiosWrapper extends Callbacks
 				this.axios.defaults=defaults;
 			}
 
+		public request (method:string,url:string,data?:any,config?:AxiosRequestConfig):GETWrapper|POSTWrapper|PUTWrapper|DELETEWrapper
+			{
+				const m=method.toLowerCase ();
+				switch (m)
+					{
+						case 'get':
+							return this.get (url,config);
+						case 'post':
+							return this.post (url,data,config);
+						case 'put':
+							return this.put (url,data,config);
+						case 'delete':
+							return this.delete (url,config);
+					}
+			}
+
 		public get (url:string,config?:AxiosRequestConfig):GETWrapper
 			{
 				return new GETWrapper (this.axios,this.callbacks,url,config);
