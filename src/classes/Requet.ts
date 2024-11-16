@@ -30,6 +30,16 @@ export default abstract class Request extends Callbacks
 				if (isPlainObject (response))
 					{
 						let {data}=response;
+						for (let callback of this.mergedCallbacks ('fail'))
+							{
+								let retry=callback (data,response);
+								// @ts-ignore
+								if ([true,false].includes (retry))
+									{
+										if (retry) this.run ();
+										return;
+									}
+							}
 						for (let callback of this.mergedCallbacks (status))
 							{
 								let retry=callback (data,response);
@@ -43,7 +53,7 @@ export default abstract class Request extends Callbacks
 					}
 			}
 
-		protected mergedCallbacks (code:number):Array<Function>
+		protected mergedCallbacks (code:number|string):Array<Function>
 			{
 				// @ts-ignore
 				return [].concat (this.callbacks[code] ?? [],this.globalCallbacks[code] ?? []);

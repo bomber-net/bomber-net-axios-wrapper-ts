@@ -12,6 +12,18 @@ export default abstract class Callbacks
 				return this.status (200,callback);
 			}
 
+		public fail (callback:Function):this
+			{
+				if (callback instanceof Function)
+					{
+						// @ts-ignore
+						if (!Object.keys (this.callbacks).includes ('fail')) this.callbacks['fail']=[];
+						// @ts-ignore
+						this.callbacks['fail'].push (callback);
+					}
+				return this;
+			}
+
 		public unauthorized (callback:Function):this
 			{
 				return this.status (401,callback);
